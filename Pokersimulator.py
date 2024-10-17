@@ -21,7 +21,7 @@ def getcolor(cardvalue, amountonecardset):
     return number
 
 def getnumber(cardvalue, amountonecardset):
-    number =  cardvalue  % amountonecardset
+    number = cardvalue % amountonecardset
     return number
 
 def ispair(cards):
@@ -47,7 +47,6 @@ def istwopairs(cards):
         return "true"
     return "false"
 
-
 def isdrilling(cards):
     value_count = {}
     for c in cards:
@@ -62,11 +61,11 @@ def isdrilling(cards):
     return "false"
 
 def isstraight(cards):
-    sortedcards = []
+    cardsnumbers = []
     for c in cards:
-       sortedcards.append(getnumber(c, 13))
-    for i in range(1, len(sortedcards)):
-        if sortedcards[i] - sortedcards[i - 1] != 1:
+       cardsnumbers.append(getnumber(c, 13))
+    for i in range(1, len(cardsnumbers)):
+        if cardsnumbers[i] - cardsnumbers[i - 1] != 1:
             return "false"
     return "true"
 
@@ -75,7 +74,6 @@ def isflush(cards):
         if getcolor(cards[i], 13) != getcolor(cards[i - 1], 13):
             return "false"
     return "true"
-
 
 def isfullhouse(cards):
     value_count = {}
@@ -98,7 +96,6 @@ def isfullhouse(cards):
     if has_triple and has_pair:
         return "true"
     return "false"
-
 
 def isvierling(cards):
     value_count = {}
@@ -169,7 +166,9 @@ def pokersimulation(amountofgames):
             kombinationen[kombination] += 1
         else:
             kombinationen[kombination] = 1
+    print("Anzahl Gezogene:")
     print(kombinationen)
+    print("Prozentuelle Anteile:")
     for key in kombinationen:
         kombinationen[key] = kombinationen[key] / amountofgames * 100
     return kombinationen
@@ -186,9 +185,3 @@ def pokersimulation(amountofgames):
 print(pokersimulation(10000))
 print("Richtige Anteile aus Internet:")
 print("Nichts: 50,117%, Paar: 42.256%, Zwei Paare: 4.753%, Drilling: 2.113%, Straight: 0.392%, Flush: 0.197%, Full House: 0.144%, Vierling: 0.024%, Straight Flush: 0.001%, Royal Flush: 0.000154%")
-
-
-
-
-
-
