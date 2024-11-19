@@ -24,68 +24,66 @@ def getnumber(cardvalue, amountonecardset):
     number = cardvalue % amountonecardset
     return number
 
-def ispair(cards):
-    for c1 in cards:
-        for c2 in cards:
-            if c2 != c1:
-                if getnumber(c1, 13) == getnumber(c2,13):
-                    return "true"
+def ispair(numbers):
+    value_count = {}
+    for n in numbers:
+        if n in value_count:
+            value_count[n] += 1
+        else:
+            value_count[n] = 1
+    for count in value_count.values():
+        if count == 2:
+            return True
+    return False
 
-def istwopairs(cards):
+def istwopairs(numbers):
     value_count = {}
     pairs = 0
-    for c in cards:
-        card_number = getnumber(c, 13)
-        if card_number in value_count:
-            value_count[card_number] += 1
+    for n in numbers:
+        if n in value_count:
+            value_count[n] += 1
         else:
-            value_count[card_number] = 1
+            value_count[n] = 1
     for count in value_count.values():
         if count == 2:
             pairs += 1
-    if pairs == 2:
-        return "true"
-    return "false"
+    return pairs == 2
 
-def isdrilling(cards):
+def isdrilling(numbers):
     value_count = {}
-    for c in cards:
-        card_number = getnumber(c, 13)
-        if card_number in value_count:
-            value_count[card_number] += 1
+    for n in numbers:
+        if n in value_count:
+            value_count[n] += 1
         else:
-            value_count[card_number] = 1
+            value_count[n] = 1
     for count in value_count.values():
         if count == 3:
-            return "true"
-    return "false"
+            return True
+    return False
 
-def isstraight(cards):
-    cardsnumbers = []
-    for c in cards:
-       cardsnumbers.append(getnumber(c, 13))
-    for i in range(1, len(cardsnumbers)):
-        if cardsnumbers[i] - cardsnumbers[i - 1] != 1:
-            return "false"
-    return "true"
+def isstraight(numbers):
+    sorted_numbers = sorted(numbers)
+    for i in range(1, len(sorted_numbers)):
+        if sorted_numbers[i] - sorted_numbers[i - 1] != 1:
+            return False
+    return True
 
-def isflush(cards):
-    for i in range(1, len(cards)):
-        if getcolor(cards[i], 13) != getcolor(cards[i - 1], 13):
-            return "false"
-    return "true"
+def isflush(colors):
+    for i in range(1, len(colors)):
+        if colors[i] != colors[i - 1]:
+            return False
+    return True
 
-def isfullhouse(cards):
+def isfullhouse(numbers):
     value_count = {}
     has_triple = False
     has_pair = False
 
-    for c in cards:
-        card_number = getnumber(c, 13)
-        if card_number in value_count:
-            value_count[card_number] += 1
+    for n in numbers:
+        if n in value_count:
+            value_count[n] += 1
         else:
-            value_count[card_number] = 1
+            value_count[n] = 1
 
     for count in value_count.values():
         if count == 3:
@@ -94,60 +92,65 @@ def isfullhouse(cards):
             has_pair = True
 
     if has_triple and has_pair:
-        return "true"
-    return "false"
+        return True
+    return False
 
-def isvierling(cards):
+def isvierling(numbers):
     value_count = {}
-    for c in cards:
-        card_number = getnumber(c, 13)
-        if card_number in value_count:
-            value_count[card_number] += 1
+    for n in numbers:
+        if n in value_count:
+            value_count[n] += 1
         else:
-            value_count[card_number] = 1
+            value_count[n] = 1
     for count in value_count.values():
         if count == 4:
-            return "true"
-    return "false"
+            return True
+    return False
 
-def isstraightflush(cards):
-    if isstraight(cards) == "true" and isflush(cards) == "true":
-        return "true"
-    return "false"
+def isstraightflush(numbers, colors):
+    return isstraight(numbers) and isflush(colors)
 
-def isroyalflush(cards):
-    if isstraightflush(cards) == "true" and getnumber(cards[0], 13) == 8:
-        return "true"
-    return "false"
+def isroyalflush(numbers, colors):
+    if isstraightflush(numbers, colors) and sorted(numbers)[0] == 8:
+        return True
+    return False
 
 def pokerspiel(amountofcards):
     cards = []
+    colors = []
+    numbers = []
     for i in range(amountofcards):
         card = random.randint(0, 51)
         while card in cards:
             card = random.randint(0, 51)
         cards.append(card)
-    if isroyalflush(cards) == "true":
+        colors.append(getcolor(card, 13))
+        numbers.append(getnumber(card, 13))
+    if isroyalflush(numbers, colors) == True:
         return "Royal Flush"
-    if isstraightflush(cards) == "true":
+    if isstraightflush(numbers, colors) == True:
         return "Straight Flush"
-    if isvierling(cards) == "true":
+    if isvierling(numbers) == True:
         return "Vierling"
-    if isfullhouse(cards) == "true":
+    if isfullhouse(numbers) == True:
         return "Full House"
-    if isflush(cards) == "true":
+    if isflush(colors) == True:
         return "Flush"
-    if isstraight(cards) == "true":
+    if isstraight(numbers) == True:
         return "Straight"
-    if isdrilling(cards) == "true":
+    if isdrilling(numbers) == True:
         return "Drilling"
-    if istwopairs(cards) == "true":
+    if istwopairs(numbers) == True:
         return "Zwei Paare"
-    if ispair(cards) == "true":
+    if ispair(numbers) == True:
         return "Paar"
     return "Nichts"
 
 def pokersimulation(amountofgames):
+    anzkarten = int(input("Mit wie vielen Karten soll gespielt werden? "))
+    if anzkarten != 5 and anzkarten != 7:
+        print("Ungültige Eingabe")
+        return
     kombinationen = {
         "Nichts": 0,
         "Paar": 0,
@@ -161,17 +164,22 @@ def pokersimulation(amountofgames):
         "Royal Flush": 0
     }
     for i in range(amountofgames):
-        kombination = pokerspiel(5)
+        kombination = pokerspiel(anzkarten)
         if kombination in kombinationen:
             kombinationen[kombination] += 1
         else:
             kombinationen[kombination] = 1
-    print("Anzahl Gezogene:")
-    print(kombinationen)
-    print("Prozentuelle Anteile:")
+
+    print("--------------------------------------------")
+    print(f"Es wurden {amountofgames} Poker-Spiele durchgeführt")
+    print("--------------------------------------------")
+    print("Kombination          | Anzahl     | Anteil")
+    print("--------------------------------------------")
     for key in kombinationen:
-        kombinationen[key] = kombinationen[key] / amountofgames * 100
-    return kombinationen
+        anteil = kombinationen[key] / amountofgames * 100
+        print(f"{key:<20} | {kombinationen[key]:<10} | {anteil:>8.2f}%")
+
+    return "--------------------------------------------"
 
 #print(ispair([1,3,12,14]))
 #print(istwopairs([1,3,16,14]))
@@ -182,6 +190,16 @@ def pokersimulation(amountofgames):
 #print(isvierling([5,18,31,7,44]))
 #print(isstraightflush([14,15,16,17,18]))
 #print(isroyalflush([8,9,10,11,12]))
-print(pokersimulation(10000))
-print("Richtige Anteile aus Internet:")
-print("Nichts: 50,117%, Paar: 42.256%, Zwei Paare: 4.753%, Drilling: 2.113%, Straight: 0.392%, Flush: 0.197%, Full House: 0.144%, Vierling: 0.024%, Straight Flush: 0.001%, Royal Flush: 0.000154%")
+
+def main():
+    anzgames = int(input("Wie oft soll die Poker-Simulation durchgeführt werden? "))
+    if anzgames < 1:
+        print("Ungültige Eingabe")
+        return
+    print(pokersimulation(anzgames))
+    print("Richtige Anteile aus Internet:")
+    print("Nichts: 50,12%, Paar: 42.26%, Zwei Paare: 4.75%, Drilling: 2.11%, "
+          "Straight: 0.39%, Flush: 0.2%, Full House: 0.14%, Vierling: 0.02%, Straight Flush: 0.00%, Royal Flush: 0.00%")
+
+if __name__ == "__main__":
+    main()
