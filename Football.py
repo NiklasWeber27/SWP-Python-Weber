@@ -1,5 +1,7 @@
 class Person:
-    def __init__(self, name, age):
+    def __init__(self, name, age=0):
+        if age == 0:            # Fehler A (neu und behebar), wenn nichts gegeben
+            age = 'Unknown'     # beheben mit age ist nicht bekannt
         self.name = name
         self.age = age
 
@@ -8,10 +10,15 @@ class Person:
     def get_name(self):
         return self.name
     def get_age(self):
-        return self.age
+        try:
+            return self.age
+        except AttributeError:      # Fehler B (hochblubber und behebar), wenn age nie
+            return 'Unknown'        # gesetzt wurde, gib Unknown aus
     def set_name(self, name):
         self.name = name
     def set_age(self, age):
+        if age < 0:                 # Fehler C (neu und nicht behebar), wenn age negativ,
+            raise ValueError('Age must be positive')    # wirf Fehler weiter
         self.age = age
 
 class Player(Person):
@@ -44,7 +51,7 @@ class Trainer(Person):
         return f'{self.name} is {self.age} years old and is the trainer of {self.club}'
 
 def main():
-    p1 = Person('Jürgen', 60)
+    p1 = Person('Jürgen', 53)
     p2 = Player('Thomas', 34, 'Midfielder', 'Fc Bayern')
     p3 = Trainer('Hansi', 60, 'Fc Barcelona')
     print(p1)
@@ -52,4 +59,7 @@ def main():
     print(p3)
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as error:    # Fehler D (hochblubber und nicht behebar), wenn
+        print(f'Error: {error}')    # Fehler auftritt, mach nicht weiter
