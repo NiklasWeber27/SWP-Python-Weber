@@ -1,6 +1,6 @@
 # gezogene Farbe kartenwert // 13
 # gezogene Karte kartenwert % 13
-
+import functools
 # es gibt 52 Karten
 
 # mögliche Kombinationen
@@ -15,6 +15,20 @@
 # 9. Royal Flush - 10, Bube, Dame, K, Ass und gleiche Farben
 
 import random
+import sys
+import time
+
+
+def timer(func):
+    @functools.wraps(func)
+    def wrapper_timer(*args, **kwargs):
+        start_time = time.perf_counter()
+        value = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        run_time = end_time - start_time
+        print(f"Funktion {func.__name__} mit {args[0]} Versuchen fertig in {run_time:.4f} Sekunden")
+        return value
+    return wrapper_timer
 
 def getcolor(cardvalue, amountonecardset):
     number = cardvalue // amountonecardset
@@ -146,6 +160,7 @@ def pokerspiel(amountofcards):
         return "Paar"
     return "Nichts"
 
+@timer
 def pokersimulation(amountofgames):
     anzkarten = int(input("Mit wie vielen Karten soll gespielt werden? "))
     if anzkarten != 5 and anzkarten != 7:
@@ -197,9 +212,13 @@ def main():
         print("Ungültige Eingabe")
         return
     print(pokersimulation(anzgames))
-    print("Richtige Anteile aus Internet:")
-    print("Nichts: 50,12%, Paar: 42.26%, Zwei Paare: 4.75%, Drilling: 2.11%, "
-          "Straight: 0.39%, Flush: 0.2%, Full House: 0.14%, Vierling: 0.02%, Straight Flush: 0.00%, Royal Flush: 0.00%")
+    #print("Richtige Anteile aus Internet:")
+    #print("Nichts: 50,12%, Paar: 42.26%, Zwei Paare: 4.75%, Drilling: 2.11%, "
+    #      "Straight: 0.39%, Flush: 0.2%, Full House: 0.14%, Vierling: 0.02%, Straight Flush: 0.00%, Royal Flush: 0.00%")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(e)
+        sys.exit(1)
