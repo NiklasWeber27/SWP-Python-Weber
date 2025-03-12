@@ -1,3 +1,4 @@
+import random
 import sys
 import Node
 
@@ -73,16 +74,14 @@ class LinkedList:
 
 def main():
     ll = LinkedList()
-    ll.insert(5)
-    ll.insert(10)
-    ll.insert(15)
-    print('Size:')
-    print(ll.getSize())
-    ll.delete(15)
+    ll.insert(random.randint(0, 100))
+    ll.insert(random.randint(0, 100))
+    ll.insert(random.randint(0, 100))
     print('Size:')
     print(ll.getSize())
     print('Gibt es 10 in der Liste?')
     print(ll.search(10))
+    print('Wert bei Index 0:')
     print(ll.getAtIndex(0))
     print('Werte:')
     ll.printList()
